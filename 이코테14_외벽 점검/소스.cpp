@@ -24,11 +24,11 @@ int solution(int n, vector<int> weak, vector<int> dist) {
             for (int index = start; index < start + length; index++) {
                 if (position < weak[index]) {
                     cnt += 1;
-                    if (cnt > dist.size()) {
-                        break;
+                    if (cnt <= dist.size())
+                    {
+                        position = weak[index] + dist[cnt - 1];
+                        s(weak[index]);
                     }
-                    position = weak[index] + dist[cnt - 1];
-                    s(weak[index]);
                 }
             }
             e("");
