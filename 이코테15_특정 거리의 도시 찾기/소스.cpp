@@ -1,18 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <functional>
 #include <unordered_map>
 #include <queue>
 
 using namespace std;
 
-template<typename T>
-void e(T t) { cout << t << endl; }
-template<typename T>
-void s(T t) { cout << t << ' '; }
-
-int main(void) {
+int main() {
 	int N, M, K, X;
 	cin >> N >> M >> K >> X;
 
@@ -25,22 +19,39 @@ int main(void) {
 		graph[s].push_back(e);
 	}
 
-	queue<int> bq;
-	vector<bool> visited(N);
+	queue<int> q;
+	vector<int> dist(N + 1, -1);
 
-	int cnt = 0;
-	bq.push(1);
-	while (cnt<3)
-	{
-		int _ = bq.front();
-		bq.pop();
-		visited[_] = true;
+	// 출발 도시까지의 거리는 0으로 설정
+	dist[X] = 0;
 
-		for (int i = 0; i < graph[_].size(); i++)
-		{
-			bq.push(graph[_][i]);
+	// 너비 우선 탐색(BFS) 수행
+	queue<int> q;
+	q.push(X);
+	while (!q.empty()) {
+		int now = q.front();
+		q.pop();
+		// 현재 도시에서 이동할 수 있는 모든 도시를 확인
+		for (int i = 0; i < graph[now].size(); i++) {
+			int nextNode = graph[now][i];
+			// 아직 방문하지 않은 도시라면
+			if (dist[nextNode] == -1) {
+				// 최단 거리 갱신
+				dist[nextNode] = dist[now] + 1;
+				q.push(nextNode);
+			}
 		}
-
-		++cnt;
 	}
+
+	// 최단 거리가 K인 모든 도시의 번호를 오름차순으로 출력
+	bool check = false;
+	for (int i = 1; i <= N; i++) {
+	    if (dist[i] == K) {
+	        cout << i << '\n';
+	        check = true;
+	    }
+	}
+	
+	// 없다면 -1 출력
+	if (!check) cout << -1 << '\n';
 }
